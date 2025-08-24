@@ -1,0 +1,139 @@
+if true then 1 else 0;;
+(*rekurzija*)
+
+(*vsota do n*)
+let rec vsota_do_n n=if n<=1 then 1 else n+(vsota_do_n (n-1));;
+vsota_do_n 4;;
+(*evklidov algoritem*)
+let rec gcd a b=if b=0 then a else gcd b (a mod b);;
+gcd 6 4;;
+gcd 4 (6 mod 4);;
+gcd 4 2;;
+gcd 2 (4 mod 2);;
+gcd 2 0;;
+2;;
+(*obrni seznam*)
+[1;2;3];;
+0::[1;2;3];;
+0::(1::(2::(3::[])));;
+List.tl[0;1;2;3];;
+
+let obrni_seznam sez=
+  let rec pomozna s1 s2=
+    if (s2=[]) then s1 else pomozna ((List.hd s2)::s1) (List.tl s2)
+  in pomozna [] sez;;
+obrni_seznam [1;2;3];;
+(*[] [1;2;3]*)
+(*(1::[]) [2;3]*)
+(*(2::(1::[])) [3]*)
+(*(3::(2::(1::[]))) []*)
+
+
+(*združi seznam*)
+let rec zdruzi_seznama s1 s2=if s1=[] then s2 else (List.hd s1)::(zdruzi_seznama (List.tl s1) s2);;
+zdruzi_seznama [1;2;3] [4;5];;
+1::(zdruzi_seznama [2;3] [4;5]);;
+1::(2::(zdruzi_seznama [3] [4;5]));;
+1::(2::(3::(zdruzi_seznama [] [4;5])));;
+1::(2::(3::([4;5])));;
+(*zaradi tega je @ prepovedan pri domaci, preveč operacij*)
+
+(*dodaj na konec*)
+let dodaj_na_konec elm sez=zdruzi_seznama sez [elm];;
+dodaj_na_konec 5 [1;2;3];; 
+(*ujemanje vzorcev*) 
+(*n-terice*)
+match (1,"foo",2.4) with (a,b,c)->b;;
+let drugi_od_treh x=match x with (a,b,c)->b;;
+drugi_od_treh ("a",'b',false);;
+
+let drugi_od_treh =function (a,b,c)->b;;
+let drugi_od_treh (a,b,c)=b;;
+
+(*operator za implikacijo*)
+let implikacija a b=match (a,b)with
+  | (false,false)->true
+  | (false,true)->true
+  | (true,false)->false
+  | (true,true)->true;;
+implikacija true false;; 
+
+
+let implikacija a b=match (a,b)with
+  | (false,false) | (false,true) | (true,true)->true 
+  | (true,false)->false;;
+
+let implikacija a b=match (a,b)with
+  | (true,false)->false
+  | (x,y)->true;;
+
+let implikacija a b=match (a,b)with
+  | (true,false)->false
+  | (x)->true;;
+
+let implikacija a b=match (a,b)with
+  |  (true,false)->false
+  | _->true;;
+
+let implikacija a b=match (a,b)with
+    true,false->false
+  | _->true;;
+(*napisi fznkcijo za glavo seznama*)
+let glava sez=match sez with
+  | h::t->h
+  | []-> failwith "prazen seznam";;
+
+glava [1;2;3];;
+glava [];; 
+
+let glava =function
+  |  h::_->h
+  | []-> failwith "prazen seznam";;
+
+List.hd [[]];;
+(*napisi funkcijo, ki preveri ce je element v seznamu*)
+let rec je_element elm=function
+  | h::t when h=elm->true
+  | h::t->je_element elm t
+  | []->false;;
+je_element 3 [1;2];;
+je_element 3 [2];;
+je_element 3 [];;
+false;;
+
+je_element 3 [1;3;2];;
+je_element 3 [3;2];;
+true;;
+
+(**)
+let f x y=x+y;;
+let f=fun x->fun y->x+y;;
+let f x=fun y->x+y;; (*tako deluje je_element*)
+   
+(*napisi funkcijo ki izracuna dolzino seznama*)
+let rec dolzina_seznama=function (*function sam 1 spremnljivka, fun ne dela pri mujemanju vzorcev*)
+  | h::t->1+(dolzina_seznama t)
+  | []->0;;
+dolzina_seznama [1;43;3];;
+(*maximum seznama*)
+let rec maximum=function
+  | h1::h2::t when h1>=h2->maximum (h1::t)
+  | h1::h2::t-> maximum (h2::t)
+  | h::[]->h (*[h] - isto*)
+  | []->failwith "prazen seznam";;
+
+maximum [3.4;3.;5.;69.;1.];;
+(*fibbonaci*)
+let rec fibonacci = function
+  |x when x<=1->failwith "too low of a value"
+  |1->[1]
+  |2->[1;1]
+  |x->match fibonacci (x-1) with
+    | h1::h2::t->(h1+h2)::h1::h2::t
+    | _-> failwith "se nikoli ne bo zgodilo";;
+fibonacci 40;;
+
+
+
+
+

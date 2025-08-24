@@ -1,0 +1,121 @@
+match 'a' with 'A'..'Z'->true | _->false;;
+
+let swap_upper_lower znak=match znak with 
+  | 'A'..'Z'-> char_of_int ((int_of_char znak)+32)
+  | 'a'..'z'-> char_of_int ((int_of_char znak)-32)
+  | _->znak;;
+swap_upper_lower 'n';;
+swap_upper_lower 'D';;
+swap_upper_lower '?';;
+
+(*iteracija*)
+let rec iterate funkcija element=function
+  | n when n<=0 ->element
+  | n ->iterate funkcija (funkcija element) (n-1);;
+iterate (fun x->1::x) [5;7] 3;;
+
+(*potenca*)
+2.**10.;;
+(*let potenca_za_int osnova eksponent=iterate (fun x->?) (zacetna vrednost za element) (eksponent);;*)
+let potenca_za_int osnova eksponent=iterate (fun x->x*osnova) 1 eksponent;;
+potenca_za_int 2 10;;
+
+(*primerjava dolžine seznamov*)
+List.length [1;5;7];;
+let rec enako_dolga_seznama s1 s2=match (s1, s2) with
+  | (h1::t1,h2::t2)->enako_dolga_seznama t1 t2
+  | ([],[])->true
+  | _->false;;
+enako_dolga_seznama [1;2] ["foo"];;
+enako_dolga_seznama [1;2] ["foo";"bar"];; 
+enako_dolga_seznama [1;2] [];;
+enako_dolga_seznama [] [];;
+
+(*KOLOKVIJ NALOGA*)
+['a',1;'c',4;'d',2;'f',4;];; 
+(*let vstavi_v_seznam_parov elm sez;;*)
+(*let vstavi_v_seznam_parov (k,v) sez;;*)
+let rec vstavi_v_seznam_parov (k,v)=function
+  | (k2,v2)::t when k<k2->(k,v)::(k2,v2)::t
+  | (k2,v2)::t->(k2,v2)::(vstavi_v_seznam_parov (k,v) t)
+  | []->[(k,v)];;
+vstavi_v_seznam_parov ('b',3) ['a',1;'c',4;'d',2;'f',4;];;
+vstavi_v_seznam_parov ('d',3) ['a',1;'c',4;'d',2;'f',4;];;
+
+
+let rec vstavi_v_seznam_parov_in_sestej (k,v)=function
+  | (k2,v2)::t when k=k2->(k2,v+v2)::t
+  | (k2,v2)::t when k<k2->(k,v)::(k2,v2)::t
+  | (k2,v2)::t->(k2,v2)::(vstavi_v_seznam_parov_in_sestej (k,v) t)
+  | []->[(k,v)];;
+vstavi_v_seznam_parov_in_sestej ('b',3) ['a',1;'c',4;'d',2;'f',4;];;
+vstavi_v_seznam_parov_in_sestej ('d',3) ['a',1;'c',4;'d',2;'f',4;];;
+
+(*explode  string->[char]*)
+"niz".[0];;
+String.length "niz";;
+
+let explode niz=
+  let rec fake_for_zanka seznam=function
+    | -1 ->seznam
+    | index ->fake_for_zanka (niz.[index]::seznam) (index-1)
+  in fake_for_zanka [] ((String.length niz)-1);;
+explode "torek";;
+(*List.map*)
+(*#show list;;*)
+List.map;;
+List.map int_of_char ['2';'t';' '];;
+List.map (fun x->x+1) [50; 116; 32];;
+List.map ((+)1) [50; 116; 32];; (*+ je funkcija!!!!*)
+(*List filter*)
+List.filter;; 
+List.filter (fun x->true) [1;0;-3;2;3];;
+List.filter (fun x->x>0) [1;0;-3;2;3];; 
+List.filter ((<)0) [1;0;-3;2;3];; (*List.filter (fun x->0<) [1;0;-3;2;3];;*)
+
+List.filter (function 'A'..'Z'->true | _->false) ['1';'t';'A';' ';'T'];;
+
+List.for_all;;
+
+List.for_all (fun x->x<0) [1;2;3];;
+List.for_all (fun x->x>0) [1;0;-3;2;3];; 
+
+(*let je_geslo niz=List.for_all (fun) (explode niz);; *)
+
+let je_geslo niz=List.for_all (function 'A'..'Z'|'a'..'z'|'0'..'9'|'#'->true | _->false) (explode niz);;
+je_geslo "asK#2";;
+je_geslo "asK+#2";;
+
+List.fold_left;;
+
+
+List.fold_left (+) 0 [50; 116; 32];;
+List.fold_left (fun x y->x+y) 0 [50; 116; 32];;
+List.fold_left (fun x y->x+y) 50 [116; 32];;
+List.fold_left (fun x y->x+y) 166 [32];;
+List.fold_left (fun x y->x+y) 198 [];;
+198;;
+
+List.fold_left (fun x y->x+1) 0 [50; 116; 32];; (*dolzina seznama*)
+List.fold_right;;
+List.fold_right (fun y x->x+1)  [50; 116; 32] 0;; (*y=32, x=0*)
+List.fold_right (fun y x->x+1)  [50; 116] 1;; (*y=116, x=1*)
+List.fold_right (fun y x->x+1)  [50] 2;; (*y=50 x=2*)
+List.fold_right (fun y x->x+1)  [] 3;;
+3;;
+
+List.fold_right (fun y x->y::x) [50; 116; 32] [1;2];; (*zdruzi seznama*)
+List.fold_left (fun x y->y::x) [] [50; 116; 32];; (*obrne seznam*)
+
+(*maximum seznama*)
+max 2 3;;
+
+(fun x->fun y->if x>y then x else y) 2 3;;
+List.fold_right max [50; 116; 32] 50;; 
+let max_seznama sez=List.fold_right max sez (List.hd sez);; 
+let max_seznama sez=List.fold_right max (List.tl sez) (List.hd sez);;
+max_seznama [50; 116; 32];;
+
+
+
+

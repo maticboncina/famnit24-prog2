@@ -1,0 +1,51 @@
+(*anonimne funkcije*)
+(fun x->x+1);; 
+(function x->x+1);; 
+(function x->x+1) 4;; 
+(*shranjevanjev spomin*)
+let f1=(fun x->x+1);; 
+f1 1;;
+let f2 x=x+1;;
+f2 1;;
+
+
+(*anonimn z več parametri*)
+(fun x->fun y->y-x);;
+(fun x->function y->y-x);;
+(function x->fun y->y-x);;
+(fun x y->y-x);;
+(*shranjevanje funkcije z več spremenvjikami*)
+let g1 = (fun x y->y-x);;
+let g1 = (function x->function y-> y-x);;
+g1 2 3;;
+let g2 x y=y-x;;
+g2 2 3;;
+let g3 x=fun y->y-x;;
+g3 2 3;;
+
+(*fun vs funcitoin*)
+(*FUNCTION IMA LAHKJO SAMO 1 PARAMETER (function x y->x-y);; NE DELA*)
+
+let int_of_bool=function true->1 | false->0;;
+int_of_bool false;;
+
+let bool_of_int=function 0->false | x->true;; (*PRI UJAMEAVNJU VZORCEV GRE ZAPORED GLEDAT, TAO JE X LAHK KARKOLI*)
+bool_of_int 432;;
+bool_of_int 0;;
+bool_of_int (-1);;
+(*let bool_of_int=fun 0->false | x->true;; KER JE UJEMANJE VZORCEV, MORA BIT function(pri -1 poci)*)
+
+(fun x->fun y->y x) 4 (fun x->x-2);;
+((fun x->fun y->y x) 4) (fun x->x-2);;
+((fun x->(fun y->(y x))) 4) (fun x->(x-2));;
+
+(fun y->fun x->x-y) (-3) 5;;(*na vajah rešen lambda račun*)  
+                            
+
+(fun x->fun y->y x) 4 (fun x->x-2);;
+(*([4/x])(fun y->y x)) (fun x->x-2) *)
+(fun y->y 4) (fun x->x-2);;
+(* [fun x->x-2/y](y 4)*)
+(fun x->x-2) 4;;
+(* [4/x](x-2)*)
+4-2;;
